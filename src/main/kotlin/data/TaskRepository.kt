@@ -90,7 +90,18 @@ object TaskRepository {
     // Add find() and update() methods here
     // Follow instructions in mdbook to implement:
     // - fun find(id: Int): Task?
+    fun find(id: Int): Task? {
+        return tasks.find { it.id == id }
+    }
     // - fun update(task: Task)
+    fun update(id: Int, newTitle: String) {
+        val task = find(id)
+        if (task != null) {
+            task.title = newTitle
+            persist()
+        }
+    }
+
 
     private fun persist() {
         file.writeText("id,title\n" + tasks.joinToString("\n") { "${it.id},${it.title}" })

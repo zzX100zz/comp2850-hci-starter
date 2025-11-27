@@ -25,11 +25,9 @@
 ### Link to Needs-Finding (LO2)
 
 **Week 6 Job Story #1**:
-> [Paste your Week 6 job story here - the one that informed your first task]
 > When I remember a deadline while listening to a lecture, I want to add a task quickly, so I can review it later, because I will forget it if I don't write it down immediately.
 
 **How Task 1 tests this**:
-[1 sentence explaining link]
 > Task 1 (Add Task) directly tests this story by measuring if a user can successfully capture a new task ("Buy milk") within a short timeframe (<10s).
 
 **Week 6 Job Story #2**:

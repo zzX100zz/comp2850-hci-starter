@@ -15,7 +15,8 @@
            placeholder="e.g., Buy milk" aria-describedby="title-hint">
     <small id="title-hint">Keep it short and specific.</small>
     {# Minor issue: unlabeled input for Week 7 Lab 2 #}
-    <input type="text" name="priority" placeholder="Priority (optional)">
+    <label for="priority" class="visually-hidden">Priority</label>
+    <input type="text" id="priority" name="priority" placeholder="Priority (optional)">
     <button type="submit">Add Task</button>
   </form>
 </section>
@@ -31,17 +32,54 @@
 <section aria-labelledby="list-heading">
   <h2 id="list-heading">Current tasks ({{ tasks | length }})</h2>
   {# Minor Issue: Image without alt text for Week 7 Lab 2 discovery #}
-  <img src="/static/img/icon.png" width="16" height="16">
-  <ul id="task-list">
+  < img src="/static/img/icon.png" width="16" height="16" alt="" aria-hidden="true">
+    <ul id="task-list">
     {% for task in tasks %}
       <li id="task-{{ task.id }}">
-        <span>{{ task.title }}</span>
-        <form action="/tasks/{{ task.id }}/delete" method="post" style="display: inline;"
-              hx-post="/tasks/{{ task.id }}/delete"
-              hx-target="#task-{{ task.id }}"
-              hx-swap="outerHTML">
-          <button type="submit" aria-label="Delete task: {{ task.title }}">Delete</button>
-        </form>
+        
+        {# Week 7 Logic: Check if this row is being edited #}
+        {% if editingId is not null and editingId == task.id %}
+          
+          <form action="/tasks/{{ task.id }}" method="post"
+                hx-post="/tasks/{{ task.id }}"
+                hx-target="#task-list"
+                hx-select="#task-list"
+                style="display: flex; gap: 10px; align-items: center;">
+            
+            <label for="edit-title-{{ task.id }}" class="visually-hidden">Edit title</label>
+            <input type="text" id="edit-title-{{ task.id }}" name="title" value="{{ task.title }}" required>
+            
+            <button type="submit">Save</button>
+            
+            <a href=" " 
+               hx-get="/tasks/{{ task.id }}" 
+               hx-target="#task-list" 
+               hx-select="#task-list" 
+               role="button" 
+               class="secondary">Cancel</a >
+          </form>
+
+        {% else %}
+
+          <span>{{ task.title }}</span>
+          
+          <div style="display: inline-block;">
+            <a href="/tasks/{{ task.id }}/edit" 
+               hx-get="/tasks/{{ task.id }}/edit" 
+               hx-target="#task-list" 
+               hx-select="#task-list" 
+               role="button" 
+               style="margin-right: 5px;">Edit</a >
+
+            <form action="/tasks/{{ task.id }}/delete" method="post" style="display: inline;"
+                  hx-post="/tasks/{{ task.id }}/delete"
+                  hx-target="#task-{{ task.id }}"
+                  hx-swap="outerHTML">
+              <button type="submit" aria-label="Delete task: {{ task.title }}">Delete</button>
+            </form>
+          </div>
+
+        {% endif %}
       </li>
     {% else %}
       <li>No tasks yet. Add one above!</li>

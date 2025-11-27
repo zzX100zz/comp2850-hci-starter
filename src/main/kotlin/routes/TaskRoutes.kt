@@ -65,10 +65,13 @@ fun Route.taskRoutes() {
      * Returns full page (no HTMX differentiation in Week 6)
      */
     get("/tasks") {
+        val editingId = call.request.queryParameters["editing"]?.toIntOrNull()
+
         val model =
             mapOf(
                 "title" to "Tasks",
                 "tasks" to TaskRepository.all(),
+                "editingId" to editingId,
             )
         val template = pebble.getTemplate("tasks/index.peb")
         val writer = StringWriter()
@@ -147,4 +150,75 @@ fun Route.taskRoutes() {
     // - GET /tasks/{id}/edit - Show edit form (dual-mode)
     // - POST /tasks/{id}/edit - Save edits with validation (dual-mode)
     // - GET /tasks/{id}/view - Cancel edit (HTMX only)
+    /**
+     * GET /tasks/{id}/edit - Enter edit mode
+     * HTMX: Returns just the list (with editingId set) to swap the UI
+     * No-JS: Redirects to /tasks?editing={id} to reload page with edit form
+     */
+    get("/tasks/{id}/edit") {
+        val id = call.parameters["id"]?.toIntOrNull()
+        if (id == null) {
+            call.respond(HttpStatusCode.BadRequest)
+            return@get
+        }
+
+        if (call.isHtmx()) {
+            // For HTMX, we re-render the list but with "editingId" set.
+            // The template logic you added to index.peb will switch this row to a form.
+            val model = mapOf(
+                "tasks" to TaskRepository.all(),
+                "editingId" to id
+            )
+            val template = pebble.getTemplate("tasks/index.peb")
+            val writer = StringWriter()
+            template.evaluate(writer, model)
+            call.respondText(writer.toString(), ContentType.Text.Html)
+        } else {
+            // No-JS fallback: Redirect to main list with query param
+            call.respondRedirect("/tasks?editing=$id")
+        }
+    }
+
+    /**
+     * POST /tasks/{id} - Save changes (Update)
+     */
+    post("/tasks/{id}") {
+        val id = call.parameters["id"]?.toIntOrNull()
+        val title = call.receiveParameters()["title"]?.trim()
+
+        if (id != null && !title.isNullOrBlank()) {
+            TaskRepository.update(id, title)
+        }
+
+        if (call.isHtmx()) {
+            // Render the updated list (editingId is null, so it goes back to read-only)
+            val model = mapOf("tasks" to TaskRepository.all())
+            val template = pebble.getTemplate("tasks/index.peb")
+            val writer = StringWriter()
+            template.evaluate(writer, model)
+            call.respondText(writer.toString(), ContentType.Text.Html)
+        } else {
+            // No-JS: PRG pattern
+            call.respondRedirect("/tasks")
+        }
+    }
+
+    /**
+     * GET /tasks/{id} - Cancel edit / View task
+     * Used by the "Cancel" button to exit edit mode
+     */
+    get("/tasks/{id}") {
+        if (call.isHtmx()) {
+            // Just return the list without editingId -> renders as read-only text
+            val model = mapOf("tasks" to TaskRepository.all())
+            val template = pebble.getTemplate("tasks/index.peb")
+            val writer = StringWriter()
+            template.evaluate(writer, model)
+            call.respondText(writer.toString(), ContentType.Text.Html)
+        } else {
+            // No-JS: Just go back to the main list
+            call.respondRedirect("/tasks")
+        }
+    }
+
 }
