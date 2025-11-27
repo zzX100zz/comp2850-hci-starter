@@ -26,39 +26,67 @@
 
 **Week 6 Job Story #1**:
 > [Paste your Week 6 job story here - the one that informed your first task]
+> When I remember a deadline while listening to a lecture, I want to add a task quickly, so I can review it later, because I will forget it if I don't write it down immediately.
 
 **How Task 1 tests this**:
 [1 sentence explaining link]
+> Task 1 (Add Task) directly tests this story by measuring if a user can successfully capture a new task ("Buy milk") within a short timeframe (<10s).
+
+**Week 6 Job Story #2**:
+> When I have finished an assignment, I want to remove it from my list, so I can focus on what is left, because a cluttered list makes me feel anxious.
+
+**How Task 3 tests this**:
+> Task 3 (Delete Task) tests this story by verifying if the user can easily locate and remove a completed item to declutter their view.
+
+**Week 6 Job Story #3**:
+When I have a long list of accumulated tasks and deadlines, I want to quickly find a specific task (like "Submit Portfolio"), so I can check its status or mark it as complete without scrolling endlessly, because searching through a cluttered list causes me anxiety and wastes my time.
+
+**How Task 2 tests this**:
+Task 2 (Find Task) tests this by measuring if the user can locate a specific item within the target time (< 5 seconds) using visual scanning or filter features, verifying the interface scales well with content.
+
+**Week 6 Job Story #4**:
+When I am using an old library computer or a secure terminal where JavaScript is disabled for security, I want to still be able to add and view my tasks, so I can capture important to-dos immediately regardless of the device I am using, because I cannot rely on always having my personal smartphone or laptop with me.
+
+**How Task 4 tests this**:
+Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete) remain operational via server-side rendering (POST-Redirect-GET pattern) when client-side scripting is unavailable. 
 
 ---
 
 ### Evaluation Tasks (4-5 tasks)
 
-#### Task 1 (T1): [Task Name]
+#### Task 1 (T1): Add Task
 
-- **Scenario**: [Brief context - what person needs to do]
-- **Action**: [Specific instruction - what to tell participant]
-- **Success**: [Observable outcome - how you know it worked]
-- **Target time**: [e.g., <10 seconds]
-- **Linked to**: [Week 6 Job Story #X]
+- **Scenario**: You are in a lecture and suddenly remember you need to buy milk on your way home.
+- **Action**: Add a new task with the title "Buy milk".
+- **Success**: The task "Buy milk" appears in your task list at the bottom.
+- **Target time**: < 8 seconds
+- **Linked to**: Week 6 Job Story #1
 
-#### Task 2 (T2): [Task Name]
+#### Task 2 (T2): Find Task
 
-- **Scenario**:
-- **Action**:
-- **Success**:
-- **Target time**:
-- **Linked to**:
+- **Scenario**: Your list is getting long and you need to check if you already wrote down the deadline for your coursework.
+- **Action**: Find the task labeled "Submit HCI Portfolio".
+- **Success**: User verbalizes they have found the task or points to it.
+- **Target time**: < 5 seconds
+- **Linked to**: Week 6 Job Story #3
 
-#### Task 3 (T3): [Task Name]
+#### Task 3 (T3):  Delete Task
 
-- **Scenario**:
-- **Action**:
-- **Success**:
-- **Target time**:
-- **Linked to**:
+- **Scenario**: You have just bought the milk and returned home.
+- **Action**: Delete the "Buy milk" task from your list.
+- **Success**: The "Buy milk" task disappears from the list without errors.
+- **Target time**: < 5 seconds
+- **Linked to**: Week 6 Job Story #2
 
 [Add Tasks 4-5 as needed]
+
+#### Task 4 (T4):  No-JS Fallback
+
+- **Scenario**: You are using an old library computer where JavaScript is disabled for security.
+- **Action**: Try to add another task "Return books".
+- **Success**: The page reloads, and the task "Return books" appears in the list.
+- **Target time**: < 10 seconds
+- **Linked to**: Week 6 Job Story #4
 
 ---
 
