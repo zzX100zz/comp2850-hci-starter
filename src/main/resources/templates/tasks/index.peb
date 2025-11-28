@@ -26,7 +26,7 @@
   </form>
 </section>
 
-<hr />
+<hr/>
 
 {# Week 8 New: Search Form #}
 <section aria-labelledby="search-heading" style="margin-bottom: 20px;">
@@ -64,7 +64,7 @@
       </h2>
       
       {# Minor Issue: Image without alt text for Week 7 Lab 2 discovery #}
-      < img src="/static/img/icon.png" width="16" height="16" alt="" aria-hidden="true" style="margin-bottom: 10px;">
+      <img src="/static/img/icon.png" width="16" height="16" alt="" aria-hidden="true" style="margin-bottom: 10px;">
       
       <ul id="task-list">
         {% for task in tasks %}
