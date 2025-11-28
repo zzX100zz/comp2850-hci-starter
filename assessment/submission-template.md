@@ -11,10 +11,10 @@
 
 ## Privacy & Ethics Statement
 
-- [ ] I confirm all participant data is anonymous (session IDs use P1_xxxx format, not real names)
-- [ ] I confirm all screenshots are cropped/blurred to remove PII (no names, emails, student IDs visible)
-- [ ] I confirm all participants gave informed consent
-- [ ] I confirm this work is my own (AI tools used for code assistance are cited below)
+- [x] I confirm all participant data is anonymous (session IDs use P1_xxxx format, not real names)
+- [x] I confirm all screenshots are cropped/blurred to remove PII (no names, emails, student IDs visible)
+- [x] I confirm all participants gave informed consent
+- [x] I confirm this work is my own (AI tools used for code assistance are cited below)
 
 **AI tools used** (if any): [e.g., "Copilot for route handler boilerplate (lines 45-67 in diffs)"]
 
@@ -94,10 +94,10 @@ Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete)
 "Thank you for participating in my HCI evaluation. This will take about 15 minutes. I'm testing my task management interface, not you. There are no right or wrong answers."
 
 **Rights**:
-- [ ] "Your participation is voluntary. You can stop at any time without giving a reason."
-- [ ] "Your data will be anonymous. I'll use a code (like P1) instead of your name."
-- [ ] "I may take screenshots and notes. I'll remove any identifying information."
-- [ ] "Do you consent to participate?" [Wait for verbal yes]
+- [x] "Your participation is voluntary. You can stop at any time without giving a reason."
+- [x] "Your data will be anonymous. I'll use a code (like P1) instead of your name."
+- [x] "I may take screenshots and notes. I'll remove any identifying information."
+- [x] "Do you consent to participate?" [Wait for verbal yes]
 
 **Recorded consent timestamp**: [e.g., "P1 consented 22/11/2025 14:05"]
 
