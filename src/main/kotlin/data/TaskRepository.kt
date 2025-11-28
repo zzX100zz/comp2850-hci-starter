@@ -101,6 +101,34 @@ object TaskRepository {
             persist()
         }
     }
+    // ---------------- Week 8 Implementation: Search & Pagination ----------------
+    /**
+     * Filters tasks by title query and returns a specific page of results.
+     * Returns: Pair(List of tasks for current page, Total count of matching tasks)
+     */
+    fun search(query: String, page: Int, pageSize: Int): Pair<List<Task>, Int> {
+        // 1. Filter by query (if provided)
+        val filtered = if (query.isBlank()) {
+            tasks // No query? Return all
+        } else {
+            tasks.filter { it.title.contains(query, ignoreCase = true) }
+        }
+
+        val totalCount = filtered.size
+
+        // 2. Paginate (Skip & Take logic)
+        val offset = (page - 1) * pageSize
+        
+        val pagedTasks = if (offset >= totalCount) {
+            emptyList()
+        } else {
+            // Ensure we don't go out of bounds
+            val endIndex = minOf(offset + pageSize, totalCount)
+            filtered.subList(offset, endIndex)
+        }
+
+        return Pair(pagedTasks, totalCount)
+    }
 
 
     private fun persist() {

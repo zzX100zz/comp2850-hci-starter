@@ -64,20 +64,43 @@ fun Route.taskRoutes() {
      * GET /tasks - List all tasks
      * Returns full page (no HTMX differentiation in Week 6)
      */
+        /**
+     * GET /tasks - List tasks with Search & Pagination (Week 8)
+     */
     get("/tasks") {
+        // 1. Parse Query Parameters (q = query, page = page number)
+        val query = call.request.queryParameters["q"] ?: ""
+        val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
         val editingId = call.request.queryParameters["editing"]?.toIntOrNull()
+        
+        // 2. Configuration (Page size could be config constant)
+        val pageSize = 5 
 
-        val model =
-            mapOf(
-                "title" to "Tasks",
-                "tasks" to TaskRepository.all(),
-                "editingId" to editingId,
-            )
+        // 3. Get Data from Repository (Using Week 8 search method)
+        val (tasks, totalCount) = TaskRepository.search(query, page, pageSize)
+
+        // 4. Calculate Total Pages
+        // Logic: (total + pageSize - 1) / pageSize gives ceil(total/size) using integer division
+        val totalPages = if (totalCount > 0) (totalCount + pageSize - 1) / pageSize else 1
+
+        val model = mapOf(
+            "title" to "Tasks",
+            "tasks" to tasks,
+            "editingId" to editingId,
+            // Week 8: New variables for template
+            "q" to query,
+            "page" to page,
+            "totalPages" to totalPages,
+            "totalCount" to totalCount
+        )
+
+        // 5. Render Template
         val template = pebble.getTemplate("tasks/index.peb")
         val writer = StringWriter()
         template.evaluate(writer, model)
         call.respondText(writer.toString(), ContentType.Text.Html)
     }
+
 
     /**
      * POST /tasks - Add new task
