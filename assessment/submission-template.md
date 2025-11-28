@@ -111,17 +111,16 @@ Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete)
 |---------|-------------|------------------------------|------|--------------|-----------------|--------------|----------|
 | SR errors not announced | metrics.csv L47-49 + P2 notes 14:23 | P2: "I didn't hear any error" | 3.3.1 Level A | 5 | 5 | 3 | 7 |
 | [Your finding 2] | [Link to metrics.csv line OR pilot notes] | [Participant quote + timestamp] | [WCAG criterion] | [1-5] | [1-5] | [1-5] | [Score] |
-| [Your finding 3] | | | | | | | |
-| [Your finding 4] | | | | | | | |
-| [Your finding 5] | | | | | | | |
+| Double submission of tasks | metrics.csv rows 5-6 (P3 added twice in 1s) | P3 added "Buy milk" twice. Observation: "Clicked add, didn't see it immediately, clicked again." | Nielsen #1 Visibility of System Status | 3 | 1 | 1 | 5 |
+| Success status silent for SR | Code Inspection (TaskRoutes.kt) + P3 confusion | Success message div lacks `role="status"` or `aria-live`. | WCAG 4.1.3 Status Messages (AA) | 3 | 5 | 1 | 9 |
+| Missing Form Label | Week 7 Audit (Axe) | Priority input lacks accessible name. | WCAG 3.3.2 Labels or Instructions (A) | 3 | 5 | 1 | 9 |
 
 **Priority formula**: (Impact + Inclusion) - Effort
 
 **Top 3 priorities for redesign**:
-1. [Finding #X - Priority score Y]
-2. [Finding #X - Priority score Y]
-3. [Finding #X - Priority score Y]
-
+1.  Fix Success Status (Add ARIA role) - Priority 9
+2.  Fix Missing Label (Add visually-hidden label) - Priority 9
+3. Prevent Double Submission (Add visual feedback/disable button) - Priority 5
 ---
 
 ## 3. Pilot Metrics (metrics.csv)
@@ -132,6 +131,15 @@ Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete)
 ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 2025-11-22T14:18:23.456Z,P1_a7f3,req_001,T1_add,success,,890,200,on
 [Your metrics data here - all rows from Logger.kt output]
+ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
+2025-11-28T02:41:38.365395500Z,P1_Mouse,ba827e5d,T1_Add,persist,success,10,201,on
+2025-11-28T02:41:46.541890500Z,P1_Mouse,9a548ed3,T3_Delete,persist,success,1,200,on
+2025-11-28T02:44:27.037988600Z,P2_Keyboard,fe61629d,T1_Add,persist,success,12,201,on
+2025-11-28T02:44:41.492445800Z,P2_Keyboard,d9f711b8,T3_Delete,persist,success,2,200,on
+2025-11-28T02:46:05.301071900Z,P3_Mouse,02b977d1,T1_Add,persist,success,2,201,on
+2025-11-28T02:46:06.754112700Z,P3_Mouse,948395cb,T1_Add,persist,success,1,201,on
+2025-11-28T02:46:16.329602500Z,P3_Mouse,e94b66f2,T3_Delete,persist,success,0,200,on
+2025-11-28T02:46:18.844935Z,P3_Mouse,b14fefc5,T3_Delete,persist,success,1,200,on
 ```
 
 **Participant summary**:
@@ -270,11 +278,14 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 | after-sr-error.png | Error message WITH role="alert" added | Fix #1 verification |
 | regression-axe-report.png | axe DevTools showing 0 violations | Verification Part A |
 | [your-screenshot-3.png] | [Description] | [Which finding/fix this supports] |
+| wk9-validation-error.png | Yellow error message "Title is required" | Proof that validation logic works (P3 testing) |
+| wk9-double-add-log.png | Screenshot of metrics.csv rows 5-6 | **Finding #1**: Double submission timestamps |
+| wk7-missing-label-axe.png | Axe tool error "Form elements do not have labels" | **Finding #3**: Week 7 Accessibility Audit |
 
 **PII check**:
-- [ ] All screenshots cropped to show only relevant UI
-- [ ] Browser bookmarks/tabs not visible
-- [ ] Participant names/emails blurred or not visible
+- [x] All screenshots cropped to show only relevant UI
+- [x] Browser bookmarks/tabs not visible
+- [x] Participant names/emails blurred or not visible
 
 ---
 
@@ -282,16 +293,21 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 
 **Instructions**: Attach pilot notes as separate files (P1-notes.md, P2-notes.md, etc.). Summarize key observations here.
 
-**P1** ([ Variant - e.g., "Standard mouse + HTMX"]):
-- **Key observation 1**: [Quote + timestamp - e.g., "Struggled with filter button (09:47)"]
-- **Key observation 2**: [Quote + timestamp]
+**P1** (Mouse):
+- **Key observation 1**: Smooth completion. Add time 10ms. No issues found.
 
-**P2** ([Variant]):
-- **Key observation 1**: [Quote + timestamp]
-- **Key observation 2**: [Quote + timestamp]
+**P2** (Keyboard):
+- Navigated using Tab/Enter.
+- **Key observation 1**: Focus rings were visible.
+- **Key observation 2**: Completed Add/Delete cycle efficiently (12ms add time).
 
 [Repeat for P3, P4 if applicable]
 
+**P3** (Mouse):
+- **Key observation 1**: At 02:46:05, P3 clicked "Add". Seemed unsure if it worked, clicked again 1.4s later.
+- Resulted in duplicate tasks.
+- Deleted both duplicates afterwards.
+- Triggered validation error intentionally to test robustness (see screenshot).
 ---
 
 ## Evidence Chain Example (Full Trace)

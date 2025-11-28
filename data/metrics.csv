@@ -1,0 +1,9 @@
+ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
+2025-11-28T02:41:38.365395500Z,P1_Mouse,ba827e5d,T1_Add,persist,success,10,201,on
+2025-11-28T02:41:46.541890500Z,P1_Mouse,9a548ed3,T3_Delete,persist,success,1,200,on
+2025-11-28T02:44:27.037988600Z,P2_Keyboard,fe61629d,T1_Add,persist,success,12,201,on
+2025-11-28T02:44:41.492445800Z,P2_Keyboard,d9f711b8,T3_Delete,persist,success,2,200,on
+2025-11-28T02:46:05.301071900Z,P3_Mouse,02b977d1,T1_Add,persist,success,2,201,on
+2025-11-28T02:46:06.754112700Z,P3_Mouse,948395cb,T1_Add,persist,success,1,201,on
+2025-11-28T02:46:16.329602500Z,P3_Mouse,e94b66f2,T3_Delete,persist,success,0,200,on
+2025-11-28T02:46:18.844935Z,P3_Mouse,b14fefc5,T3_Delete,persist,success,1,200,on
