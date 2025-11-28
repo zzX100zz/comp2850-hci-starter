@@ -37,16 +37,16 @@
 > Task 3 (Delete Task) tests this story by verifying if the user can easily locate and remove a completed item to declutter their view.
 
 **Week 6 Job Story #3**:
-When I have a long list of accumulated tasks and deadlines, I want to quickly find a specific task (like "Submit Portfolio"), so I can check its status or mark it as complete without scrolling endlessly, because searching through a cluttered list causes me anxiety and wastes my time.
+> When I have a long list of accumulated tasks and deadlines, I want to quickly find a specific task (like "Submit Portfolio"), so I can check its status or mark it as complete without scrolling endlessly, because searching through a cluttered list causes me anxiety and wastes my time.
 
 **How Task 2 tests this**:
-Task 2 (Find Task) tests this by measuring if the user can locate a specific item within the target time (< 5 seconds) using visual scanning or filter features, verifying the interface scales well with content.
+> Task 2 (Find Task) tests this by measuring if the user can locate a specific item within the target time (< 5 seconds) using visual scanning or filter features, verifying the interface scales well with content.
 
 **Week 6 Job Story #4**:
-When I am using an old library computer or a secure terminal where JavaScript is disabled for security, I want to still be able to add and view my tasks, so I can capture important to-dos immediately regardless of the device I am using, because I cannot rely on always having my personal smartphone or laptop with me.
+> When I am using an old library computer or a secure terminal where JavaScript is disabled for security, I want to still be able to add and view my tasks, so I can capture important to-dos immediately regardless of the device I am using, because I cannot rely on always having my personal smartphone or laptop with me.
 
 **How Task 4 tests this**:
-Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete) remain operational via server-side rendering (POST-Redirect-GET pattern) when client-side scripting is unavailable. 
+> Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete) remain operational via server-side rendering (POST-Redirect-GET pattern) when client-side scripting is unavailable. 
 
 ---
 
@@ -75,8 +75,6 @@ Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete)
 - **Success**: The "Buy milk" task disappears from the list without errors.
 - **Target time**: < 5 seconds
 - **Linked to**: Week 6 Job Story #2
-
-[Add Tasks 4-5 as needed]
 
 #### Task 4 (T4):  No-JS Fallback
 
@@ -109,7 +107,6 @@ Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete)
 
 | Finding | Data Source | Observation (Quote/Timestamp) | WCAG | Impact (1-5) | Inclusion (1-5) | Effort (1-5) | Priority |
 |---------|-------------|------------------------------|------|--------------|-----------------|--------------|----------|
-| [Your finding 2] | [Link to metrics.csv line OR pilot notes] | 
 | Double submission of tasks | metrics.csv rows 5-6 (P3 added twice in 1s) | P3 added "Buy milk" twice. Observation: "Clicked add, didn't see it immediately, clicked again." | Nielsen #1 Visibility of System Status | 3 | 1 | 1 | 5 |
 | Success status silent for SR | Code Inspection (TaskRoutes.kt) + P3 confusion | Success message div lacks role="status" or aria-live. | WCAG 4.1.3 Status Messages (AA) | 3 | 5 | 1 | 9 |
 | Broken Image | Week 7 Debugging | Image failed to load due to space in tag (< img). | WCAG 4.1.1 Parsing(A)| 2 | 2 | 1 | 3 |
@@ -129,8 +126,6 @@ Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete)
 **Instructions**: Paste your raw CSV data here OR attach metrics.csv file
 
 ```csv
-ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
-[Your metrics data here - all rows from Logger.kt output]
 ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 2025-11-28T02:41:38.365395500Z,P1_Mouse,ba827e5d,T1_Add,persist,success,10,201,on
 2025-11-28T02:41:46.541890500Z,P1_Mouse,9a548ed3,T3_Delete,persist,success,1,200,on
