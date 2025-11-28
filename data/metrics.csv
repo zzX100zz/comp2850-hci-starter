@@ -7,3 +7,7 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 2025-11-28T02:46:06.754112700Z,P3_Mouse,948395cb,T1_Add,persist,success,1,201,on
 2025-11-28T02:46:16.329602500Z,P3_Mouse,e94b66f2,T3_Delete,persist,success,0,200,on
 2025-11-28T02:46:18.844935Z,P3_Mouse,b14fefc5,T3_Delete,persist,success,1,200,on
+2025-11-28T03:18:14.547337300Z,anonymous,09376851,T1_Add,persist,success,11,201,on
+2025-11-28T03:18:17.224652300Z,anonymous,8400440f,T1_Add,persist,success,1,201,on
+2025-11-28T03:18:36.202801400Z,anonymous,dc50abe6,T3_Delete,persist,success,2,200,on
+2025-11-28T03:18:37.759715200Z,anonymous,461afa62,T3_Delete,persist,success,0,200,on

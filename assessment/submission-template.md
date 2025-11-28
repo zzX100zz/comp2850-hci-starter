@@ -112,14 +112,16 @@ Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete)
 | [Your finding 2] | [Link to metrics.csv line OR pilot notes] | 
 | Double submission of tasks | metrics.csv rows 5-6 (P3 added twice in 1s) | P3 added "Buy milk" twice. Observation: "Clicked add, didn't see it immediately, clicked again." | Nielsen #1 Visibility of System Status | 3 | 1 | 1 | 5 |
 | Success status silent for SR | Code Inspection (TaskRoutes.kt) + P3 confusion | Success message div lacks role="status" or aria-live. | WCAG 4.1.3 Status Messages (AA) | 3 | 5 | 1 | 9 |
-| Missing Form Label | Week 7 Audit (Axe) | Priority input lacks accessible name. | WCAG 3.3.2 Labels or Instructions (A) | 3 | 5 | 1 | 9 |
+| Broken Image | Week 7 Debugging | Image failed to load due to space in tag (< img). | WCAG 4.1.1 Parsing(A)| 2 | 2 | 1 | 3 |
+
 
 **Priority formula**: (Impact + Inclusion) - Effort
 
 **Top 3 priorities for redesign**:
 1.  Fix Success Status (Add ARIA role) - Priority 9
-2.  Fix Missing Label (Add visually-hidden label) - Priority 9
-3. Prevent Double Submission (Add visual feedback/disable button) - Priority 5
+2. Prevent Double Submission (Add visual feedback/disable button) - Priority 5
+3. Fix Image Syntax (Priority 3) - Simple code cleanup to restore visuals.
+
 ---
 
 ## 3. Pilot Metrics (metrics.csv)
@@ -272,9 +274,9 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 
 | Filename | What it shows | Context/Link to finding |
 |----------|---------------|-------------------------|
-| wk9-validation-error.png | Yellow error message "Title is required" | Proof that validation logic works (P3 testing) |
-| wk9-double-add-log.png | Screenshot of metrics.csv rows 5-6 | **Finding #1**: Double submission timestamps |
-| wk7-missing-label-axe.png | Axe tool error "Form elements do not have labels" | **Finding #3**: Week 7 Accessibility Audit |
+| wk9-validation-error.png | Yellow error message "Please enter a string" | Proof that validation logic works (P3 testing) |
+| wk9-double-add-log.png | Screenshot of metrics.csv rows 5-6 | Finding #1: Double submission timestamps |
+| wk7-broken-image-syntax.png | Image tag has syntax error (< img) | Finding #3: Syntax Error causing broken image |
 
 **PII check**:
 - [x] All screenshots cropped to show only relevant UI
@@ -322,6 +324,8 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 9. **Re-pilot**: P5 (SR user) pilot notes - "Heard error announcement immediately, corrected and succeeded"
 
 **Complete chain**: Data → Observation → Interpretation → Fix → Verification ✅
+
+
 
 ---
 
