@@ -109,10 +109,9 @@ Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete)
 
 | Finding | Data Source | Observation (Quote/Timestamp) | WCAG | Impact (1-5) | Inclusion (1-5) | Effort (1-5) | Priority |
 |---------|-------------|------------------------------|------|--------------|-----------------|--------------|----------|
-| SR errors not announced | metrics.csv L47-49 + P2 notes 14:23 | P2: "I didn't hear any error" | 3.3.1 Level A | 5 | 5 | 3 | 7 |
-| [Your finding 2] | [Link to metrics.csv line OR pilot notes] | [Participant quote + timestamp] | [WCAG criterion] | [1-5] | [1-5] | [1-5] | [Score] |
+| [Your finding 2] | [Link to metrics.csv line OR pilot notes] | 
 | Double submission of tasks | metrics.csv rows 5-6 (P3 added twice in 1s) | P3 added "Buy milk" twice. Observation: "Clicked add, didn't see it immediately, clicked again." | Nielsen #1 Visibility of System Status | 3 | 1 | 1 | 5 |
-| Success status silent for SR | Code Inspection (TaskRoutes.kt) + P3 confusion | Success message div lacks `role="status"` or `aria-live`. | WCAG 4.1.3 Status Messages (AA) | 3 | 5 | 1 | 9 |
+| Success status silent for SR | Code Inspection (TaskRoutes.kt) + P3 confusion | Success message div lacks role="status" or aria-live. | WCAG 4.1.3 Status Messages (AA) | 3 | 5 | 1 | 9 |
 | Missing Form Label | Week 7 Audit (Axe) | Priority input lacks accessible name. | WCAG 3.3.2 Labels or Instructions (A) | 3 | 5 | 1 | 9 |
 
 **Priority formula**: (Impact + Inclusion) - Effort
@@ -129,7 +128,6 @@ Task 4 (No-JS Fallback) tests this by verifying that core functions (Add/Delete)
 
 ```csv
 ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
-2025-11-22T14:18:23.456Z,P1_a7f3,req_001,T1_add,success,,890,200,on
 [Your metrics data here - all rows from Logger.kt output]
 ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 2025-11-28T02:41:38.365395500Z,P1_Mouse,ba827e5d,T1_Add,persist,success,10,201,on
@@ -274,10 +272,6 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 
 | Filename | What it shows | Context/Link to finding |
 |----------|---------------|-------------------------|
-| before-sr-error.png | Error message without role="alert" | Finding #1 - SR errors not announced |
-| after-sr-error.png | Error message WITH role="alert" added | Fix #1 verification |
-| regression-axe-report.png | axe DevTools showing 0 violations | Verification Part A |
-| [your-screenshot-3.png] | [Description] | [Which finding/fix this supports] |
 | wk9-validation-error.png | Yellow error message "Title is required" | Proof that validation logic works (P3 testing) |
 | wk9-double-add-log.png | Screenshot of metrics.csv rows 5-6 | **Finding #1**: Double submission timestamps |
 | wk7-missing-label-axe.png | Axe tool error "Form elements do not have labels" | **Finding #3**: Week 7 Accessibility Audit |
