@@ -63,3 +63,10 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 2025-12-01T02:38:39.583501100Z,anonymous,df900c88,T3_Delete,persist,success,1,200,on
 2025-12-01T02:38:40.027823800Z,anonymous,2bc9a132,T3_Delete,persist,success,0,200,on
 2025-12-01T02:38:40.629904700Z,anonymous,59d3c5c0,T3_Delete,persist,success,1,200,on
+2025-12-01T02:49:26.127033400Z,anonymous,302da72e,T1_Add,persist,success,4,201,on
+2025-12-01T02:49:34.223338300Z,anonymous,6d9fb73e,T1_Add,persist,success,1,201,on
+2025-12-01T02:49:35.821592100Z,anonymous,3a27edcd,T3_Delete,persist,success,2,200,on
+2025-12-01T02:49:36.533050Z,anonymous,74e34f05,T3_Delete,persist,success,1,200,on
+2025-12-01T02:49:48.336234400Z,anonymous,704bf0aa,T1_Add,persist,success,1,201,on
+2025-12-01T02:49:50.458498700Z,anonymous,e641a6f2,T3_Delete,persist,success,1,200,on
+2025-12-01T02:49:55.420083300Z,anonymous,77a4f0e3,T1_Add,persist,success,0,201,on
