@@ -106,26 +106,21 @@ fun Route.taskRoutes() {
      * Dual-mode: HTMX fragment or PRG redirect
      */
     post("/tasks") {
-        // [Week 9] Instrumentation setup
         val requestId = UUID.randomUUID().toString().substring(0, 8)
         val sessionId = call.request.queryParameters["sid"] ?: "anonymous"
         val isHtmx = call.isHtmx()
 
-        // [Week 9] Wrap logic with timer
         val (result, duration) = timed {
             val title = call.receiveParameters()["title"].orEmpty().trim()
 
             if (title.isBlank()) {
-                // [Week 9] Log validation error
                 Logger.log(sessionId, requestId, "T1_Add", "validate", "validation_error", 0, 400, isHtmx)
-                // Validation error handling
                 if (call.isHtmx()) {
                     val error = """<div id="status" hx-swap-oob="true" role="alert" aria-live="assertive">
                         Title is required. Please enter at least one character.
                     </div>"""
                     return@timed call.respondText(error, ContentType.Text.Html, HttpStatusCode.BadRequest)
                 } else {
-                    // No-JS: redirect back (could add error query param)
                     call.response.headers.append("Location", "/tasks")
                     return@timed call.respond(HttpStatusCode.SeeOther)
                 }
@@ -156,9 +151,9 @@ fun Route.taskRoutes() {
                 val template = pebble.getTemplate("tasks/index.peb")
                 val writer = StringWriter()
                 template.evaluate(writer, model)
+                
                 val html = writer.toString()
 
-                // [Week 10 Fix] Append status message for Screen Readers
                 val feedback = """
                     <div id="sr-announcer" hx-swap-oob="true" 
                          role="status" 
@@ -182,20 +177,16 @@ fun Route.taskRoutes() {
      * Dual-mode: HTMX empty response or PRG redirect
      */
     post("/tasks/{id}/delete") {
-        // [Week 9] Instrumentation setup
         val requestId = UUID.randomUUID().toString().substring(0, 8)
         val sessionId = call.request.queryParameters["sid"] ?: "anonymous"
         val isHtmx = call.isHtmx()
 
-        // [Week 9] Timer wrapper
         val (removed, duration) = timed {
             val id = call.parameters["id"]?.toIntOrNull()
             id?.let { TaskRepository.delete(it) } ?: false
         }
 
-        // [Week 9] Log outcome
-        val outcome = if (removed) "success" else "not_found"
-        Logger.log(sessionId, requestId, "T3_Delete", "persist", outcome, duration, 200, isHtmx)
+        Logger.log(sessionId, requestId, "T3_Delete", "persist", if (removed) "success" else "not_found", duration, 200, isHtmx)
 
         if (call.isHtmx()) {
             // Week 8 Update: Return list to keep pagination correct
@@ -235,13 +226,7 @@ fun Route.taskRoutes() {
      */
     get("/tasks/{id}/edit") {
         val id = call.parameters["id"]?.toIntOrNull()
-        // [Week 9] Simple log for edit interaction (optional but good)
-        Logger.log(
-            call.request.queryParameters["sid"] ?: "anonymous", 
-            UUID.randomUUID().toString().substring(0, 8), 
-            "T2_Edit", "click_edit", "success", 0, 200, call.isHtmx()
-        )
-
+        
         if (id == null) {
             call.respond(HttpStatusCode.BadRequest)
             return@get
@@ -255,8 +240,6 @@ fun Route.taskRoutes() {
         val totalPages = if (totalCount > 0) (totalCount + pageSize - 1) / pageSize else 1
 
         if (call.isHtmx()) {
-            // For HTMX, we re-render the list but with "editingId" set.
-            // The template logic you added to index.peb will switch this row to a form.
             val model = mapOf(
                 "tasks" to tasks,
                 "editingId" to id,
@@ -270,7 +253,6 @@ fun Route.taskRoutes() {
             template.evaluate(writer, model)
             call.respondText(writer.toString(), ContentType.Text.Html)
         } else {
-            // No-JS fallback: Redirect to main list with query param
             call.respondRedirect("/tasks?editing=$id&page=$page&q=$query")
         }
     }
@@ -298,7 +280,6 @@ fun Route.taskRoutes() {
                    if (updated) "success" else "error", duration, 200, isHtmx)
 
         if (call.isHtmx()) {
-            // [Week 8] Return to list view with context preserved
             val query = call.request.queryParameters["q"] ?: ""
             val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
             val (tasks, totalCount) = TaskRepository.search(query, page, 5)
@@ -316,7 +297,6 @@ fun Route.taskRoutes() {
             template.evaluate(writer, model)
             call.respondText(writer.toString(), ContentType.Text.Html)
         } else {
-            // No-JS: PRG pattern
             val query = call.request.queryParameters["q"] ?: ""
             val page = call.request.queryParameters["page"] ?: "1"
             call.respondRedirect("/tasks?page=$page&q=$query")
@@ -332,7 +312,6 @@ fun Route.taskRoutes() {
         val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
         
         if (call.isHtmx()) {
-            // Just return the list without editingId -> renders as read-only text
             val (tasks, totalCount) = TaskRepository.search(query, page, 5)
             val totalPages = if (totalCount > 0) (totalCount + 5 - 1) / 5 else 1
 
@@ -348,7 +327,6 @@ fun Route.taskRoutes() {
             template.evaluate(writer, model)
             call.respondText(writer.toString(), ContentType.Text.Html)
         } else {
-            // No-JS: Just go back to the main list
             call.respondRedirect("/tasks?page=$page&q=$query")
         }
     }
