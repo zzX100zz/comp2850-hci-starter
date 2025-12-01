@@ -59,7 +59,7 @@
       {% if q is not empty %}(Found {{ totalCount }}){% else %}({{ totalCount }}){% endif %}
   </h2>
   {# Minor Issue: Image without alt text for Week 7 Lab 2 discovery #}
-  < img src="/static/img/icon.png" width="16" height="16" alt="" aria-hidden="true">
+  <img src="/static/img/icon.png" width="16" height="16" alt="" aria-hidden="true">
   <ul id="task-list">
     {% for task in tasks %}
       <li id="task-{{ task.id }}">
