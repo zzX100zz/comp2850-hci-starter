@@ -78,3 +78,14 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 2025-12-01T02:55:31.990278900Z,anonymous,3ad52a0f,T3_Delete,persist,success,1,200,on
 2025-12-01T02:55:38.710683200Z,anonymous,45987259,T1_Add,persist,success,0,201,on
 2025-12-01T02:55:40.205958700Z,anonymous,5724dc60,T3_Delete,persist,success,2,200,on
+2025-12-01T02:59:45.781800800Z,anonymous,db45e81b,T3_Delete,persist,success,4,200,on
+2025-12-01T02:59:48.148588400Z,anonymous,af269105,T1_Add,persist,success,1,201,on
+2025-12-01T02:59:49.983203700Z,anonymous,5a77fc45,T3_Delete,persist,success,1,200,on
+2025-12-01T02:59:51.753058200Z,anonymous,a854baf0,T1_Add,persist,success,1,201,on
+2025-12-01T02:59:56.107901700Z,anonymous,b2a7c6be,T3_Delete,persist,success,1,200,on
+2025-12-01T03:00:01.365995800Z,anonymous,1aeac5a3,T1_Add,persist,success,1,201,on
+2025-12-01T03:00:03.219185200Z,anonymous,49e7fc20,T3_Delete,persist,success,1,200,on
+2025-12-01T03:00:08.587812Z,anonymous,23574ec5,T1_Add,persist,success,0,201,on
+2025-12-01T03:00:10.418814900Z,anonymous,f64c221c,T3_Delete,persist,success,1,200,on
+2025-12-01T03:00:23.352965300Z,anonymous,679a5c9a,T1_Add,persist,success,2,201,on
+2025-12-01T03:00:57.823812200Z,anonymous,91c4e86d,T3_Delete,persist,success,0,200,on
