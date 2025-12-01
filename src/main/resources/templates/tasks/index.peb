@@ -2,7 +2,15 @@
 
 {% block content %}
 <h1>Tasks</h1>
+{% extends "_layout/base.peb" %}
 
+{% block content %}
+<h1>Tasks</h1>
+
+<div id="sr-announcer" aria-live="polite"></div>
+{# Add Task Form - Week 6 #}
+<section aria-labelledby="add-heading">
+...
 {# Add Task Form - Week 6 #}
 <section aria-labelledby="add-heading">
   <h2 id="add-heading">Add a new task</h2>
