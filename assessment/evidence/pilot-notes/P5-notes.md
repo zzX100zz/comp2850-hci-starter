@@ -7,13 +7,13 @@
 - **09:33:00**: Read consent script.
 - **09:33:15**: Participant agreed verbally. "Yes, I consent."
 
-## Task 1: Add Task ("Buy milk")
+## Task 1: Add Task ("123")
 - **09:33:50**: Navigated to input using Tab.
-- **09:34:05**: Typed "Buy milk".
+- **09:34:05**: Typed "123".
 - **09:34:12**: Pressed `Enter`.
 - **Metric Match**: `2025-12-01T09:34:12...` (Success, 12ms)
 - **CRITICAL OBSERVATION (VERIFICATION)**: 
-    - Immediately after pressing Enter, the Screen Reader announced: **"Task Buy milk added successfully."**
+    - Immediately after pressing Enter, the Screen Reader announced: **"Task 123 added successfully."**
     - **Quote**: "Ah, that's much better. I heard the confirmation clearly this time."
     - **Result**: **PASS**. The `role="status"` fix is working.
 

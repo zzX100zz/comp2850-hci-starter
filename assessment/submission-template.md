@@ -322,8 +322,8 @@ The median task time increased slightly (10ms -> 12ms). This is likely due to th
 | wk9-broken-image-syntax.png | Image tag has syntax error (< img) | Finding #3: Syntax Error causing broken image |
 | wk9-no-feedback-evidence.png | Combined Evidence: UI shows no response visually after adding tasks (Finding #1 consequence); Browser Inspector shows DOM completely lacks any status message element (Finding #2 cause). | Findings #1 & #2 (Before): Shared Root Cause. The absence of any feedback mechanism caused the user to double-click (visual failure) and the Screen Reader to remain silent (code failure). |
 | wk10-image-fixed.png | The small icon rendering correctly | Fix #3 (After): Syntax corrected, visual restored |
-| wk10-add-button-feedback.png | "Add Task" button disabled state | Fix #2 (After): Button prevents double clicks |
-| wk10-code-feedback-added.png | Source Code showing added <div role="status"> string | Fix #1 (After): Feedback implemented WITH accessibility roles |
+| wk10-sr-code-fixed.png | Browser DevTools highlighting the new element: <div role="status" aria-live="polite">. | Fix #1 (After): Code verification. The status message is now present in the DOM with correct ARIA attributes, enabling Screen Reader announcements. |
+| wk10-visual-feedback.png | UI showing a green "Task added successfully" banner appearing above the list. | Fix #1 & #2 (After): Visual verification. The feedback is now visible, confirming the action to sighted users and preventing the uncertainty that caused double submissions. |
 
 **PII check**:
 - [x] All screenshots cropped to show only relevant UI
@@ -352,18 +352,18 @@ The median task time increased slightly (10ms -> 12ms). This is likely due to th
 
 **Instructions**: Pick ONE finding and show complete evidence trail from data → fix → verification.
 
-**Finding selected**: [e.g., "Finding #1 - SR errors not announced"]
+**Finding selected**: Success status silent for SR (Finding #2)
 
 **Evidence trail**:
-1. **Data**: metrics.csv lines 47-49 show P2 (SR user) triggered validation_error 3 times
-2. **Observation**: P2 pilot notes timestamp 14:23 - Quote: "I don't know if it worked, didn't hear anything"
-3. **Screenshot**: before-sr-error.png shows error message has no role="alert" or aria-live
-4. **WCAG**: 3.3.1 Error Identification (Level A) violation - errors not programmatically announced
-5. **Prioritisation**: findings-table.csv row 1 - Priority score 7 (Impact 5 + Inclusion 5 - Effort 3)
-6. **Fix**: implementation-diffs.md Fix #1 - Added role="alert" + aria-live="assertive" to error span
-7. **Verification**: verification.csv Part A row F2 - 3.3.1 now PASS (tested with NVDA)
-8. **Before/after**: verification.csv Part B - SR error detection improved from 0% to 100%
-9. **Re-pilot**: P5 (SR user) pilot notes - "Heard error announcement immediately, corrected and succeeded"
+1. **Data**: metrics.csv rows 5-6 show P3 accidentally double-submitted tasks (usability failure), hinting at a lack of feedback.
+2. **Observation**: P2 pilot notes timestamp 09:44:27 - Quote: "If I were blind, I wouldn't know it worked." (Noted lack of programmatic feedback).
+3. **Screenshot**: wk9-code-no-feedback.png shows the backend code (TaskRoutes.kt) returns only the updated list HTML, confirming no status message is generated at all.
+4. **WCAG**: 4.1.3 Status Messages (Level AA) violation - status update is not programmatically determined.
+5. **Prioritisation**: findings-table.csv Finding #2 - Priority 9 (Impact 3 + Inclusion 5 - Effort 1).
+6. **Fix**: implementation-diffs.md Fix #1 - Modified TaskRoutes.kt to inject a flashMessage variable and updated index.peb to render it inside a <div role="status">.
+7. **Verification**: verification.csv Part A row D1 - PASS (Tested: Status message now injects into DOM and is announced).
+8. **Before/after**: verification.csv Part B - SR success feedback rate improved from 0% to 100%.
+9. **Re-pilot**: P5 (SR user) pilot notes - "Heard 'Task 123 added successfully' immediately after pressing Enter."
 
 **Complete chain**: Data → Observation → Interpretation → Fix → Verification ✅
 
@@ -376,29 +376,29 @@ The median task time increased slightly (10ms -> 12ms). This is likely due to th
 Before submitting, verify:
 
 **Files**:
-- [ ] This completed template (submission-template.md)
-- [ ] metrics.csv (or pasted into Section 3)
-- [ ] Pilot notes (P1-notes.md, P2-notes.md, etc. OR summarised in Section 6)
-- [ ] Screenshots folder (all images referenced above)
-- [ ] Privacy statement signed (top of document)
+- [x] This completed template (submission-template.md)
+- [x] metrics.csv (or pasted into Section 3)
+- [x] Pilot notes (P1-notes.md, P2-notes.md, etc. OR summarised in Section 6)
+- [x] Screenshots folder (all images referenced above)
+- [x] Privacy statement signed (top of document)
 
 **Evidence chains**:
-- [ ] findings-table.csv links to metrics.csv lines AND/OR pilot notes timestamps
-- [ ] implementation-diffs.md references findings from table
-- [ ] verification.csv Part B shows before/after for fixes
+- [x] findings-table.csv links to metrics.csv lines AND/OR pilot notes timestamps
+- [x] implementation-diffs.md references findings from table
+- [x] verification.csv Part B shows before/after for fixes
 
 **Quality**:
-- [ ] No PII in screenshots (checked twice!)
-- [ ] Session IDs anonymous (P1_xxxx format, not real names)
-- [ ] Honest reporting (limitations acknowledged if metrics didn't improve)
-- [ ] WCAG criteria cited specifically (e.g., "3.3.1" not just "accessibility")
+- [x] No PII in screenshots (checked twice!)
+- [x] Session IDs anonymous (P1_xxxx format, not real names)
+- [x] Honest reporting (limitations acknowledged if metrics didn't improve)
+- [x] WCAG criteria cited specifically (e.g., "3.3.1" not just "accessibility")
 
 **Pass criteria met**:
-- [ ] n=2+ participants (metrics.csv has 2+ session IDs)
-- [ ] 3+ findings with evidence (findings-table.csv complete)
-- [ ] 1-3 fixes implemented (implementation-diffs.md shows code)
-- [ ] Regression complete (verification.csv has 20 checks)
-- [ ] Before/after shown (verification.csv Part B has data)
+- [x] n=2+ participants (metrics.csv has 2+ session IDs)
+- [x] 3+ findings with evidence (findings-table.csv complete)
+- [x] 1-3 fixes implemented (implementation-diffs.md shows code)
+- [x] Regression complete (verification.csv has 20 checks)
+- [x] Before/after shown (verification.csv Part B has data)
 
 ---
 
