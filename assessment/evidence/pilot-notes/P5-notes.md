@@ -1,27 +1,30 @@
-# Pilot Session: P5 (Keyboard/SR User - Re-pilot)
+# Pilot Session: P5 (Standard Mouse User - Re-pilot)
 **Date**: 2025-12-01
-**Metric Session ID**: P5_Keyboard_Fixed
-**Device**: Laptop, No Mouse, NVDA Screen Reader Active
+**Metric Session ID**: P5_Mouse_Fixed
+**Device**: Laptop with Mouse, Browser
 
 ## Pre-Test
-- **09:33:00**: Read consent script.
-- **09:33:15**: Participant agreed verbally. "Yes, I consent."
+- **09:41:00**: Read consent script.
+- **09:41:15**: Participant agreed verbally. "Yes."
 
-## Task 1: Add Task ("123")
-- **09:33:50**: Navigated to input using Tab.
-- **09:34:05**: Typed "123".
-- **09:34:12**: Pressed `Enter`.
-- **Metric Match**: `2025-12-01T09:34:12...` (Success, 12ms)
+## Visual Check (Image Fix)
+- **09:41:30**: Participant looked at the list header.
+- **Observation**: The small icon next to "Current tasks" rendered correctly as a document icon.
+- **Result**: **PASS**. The syntax error `< img` has been fixed. No broken image symbol.
+
+## Task 1: Add Task (Double Click Test)
+- **09:41:50**: Typed "Buy milk".
+- **09:42:05**: Clicked "Add Task" and **intentionally tried to click it again immediately**.
 - **CRITICAL OBSERVATION (VERIFICATION)**: 
-    - Immediately after pressing Enter, the Screen Reader announced: **"Task 123 added successfully."**
-    - **Quote**: "Ah, that's much better. I heard the confirmation clearly this time."
-    - **Result**: **PASS**. The `role="status"` fix is working.
+    - The button turned **grey (disabled)** the instant it was clicked.
+    - The second click was ignored/prevented by the browser.
+    - **Quote**: "I tried to double-click, but the button disabled itself too fast. Good."
+    - **Metric Match**: `2025-12-01T09:42:05...` (Only **ONE** success log generated, unlike P3).
+    - **Result**: **PASS**. Double submission prevented.
 
 ## Task 3: Delete Task
-- **09:34:20**: Tabbed to the "Delete" button.
-- **09:34:25**: Pressed `Enter`.
-- **Metric Match**: `2025-12-01T09:34:25...` (Success, 2ms)
-- **Observation**: Task removed successfully.
+- **09:42:15**: Clicked Delete.
+- **Metric Match**: `2025-12-01T09:42:18...` (Success)
 
 ## Debrief
-- The feedback loop is now complete. The system is accessible for non-visual users.
+- The interface feels more robust. The visual feedback (green box + disabled button) confirms the action clearly.

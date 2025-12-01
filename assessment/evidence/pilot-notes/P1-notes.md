@@ -1,7 +1,7 @@
 # Pilot Session: P1 (Standard Mouse User)
 **Date**: 2025-11-27
 **Metric Session ID**: P1_Mouse
-**Device**: Laptop with Trackpad, Chrome Browser
+**Device**: Laptop with Trackpad, Browser
 
 ## Pre-Test
 - **09:40:00**: Read consent script.
