@@ -101,39 +101,60 @@ fun Route.taskRoutes() {
     }
 
 
-    /**
+        /**
      * POST /tasks - Add new task
      * Dual-mode: HTMX fragment or PRG redirect
      */
     post("/tasks") {
-        // [Week 9] Instrumentation setup
         val requestId = UUID.randomUUID().toString().substring(0, 8)
         val sessionId = call.request.queryParameters["sid"] ?: "anonymous"
         val isHtmx = call.isHtmx()
-
-        // [Week 9] Wrap logic with timer
+        val params = call.receiveParameters()
+        val title = params["title"].orEmpty().trim()
         val (result, duration) = timed {
-            val title = call.receiveParameters()["title"].orEmpty().trim()
-
             if (title.isBlank()) {
-                // [Week 9] Log validation error
                 Logger.log(sessionId, requestId, "T1_Add", "validate", "validation_error", 0, 400, isHtmx)
-                // Validation error handling
                 if (call.isHtmx()) {
-                    val error = """<div id="status" hx-swap-oob="true" role="alert" aria-live="assertive">
-                        Title is required. Please enter at least one character.
-                    </div>"""
+                    val error = """<div id="status" hx-swap-oob="true" role="alert" aria-live="assertive">Title is required.</div>"""
                     return@timed call.respondText(error, ContentType.Text.Html, HttpStatusCode.BadRequest)
                 } else {
-                    // No-JS: redirect back (could add error query param)
                     call.response.headers.append("Location", "/tasks")
                     return@timed call.respond(HttpStatusCode.SeeOther)
                 }
             }
-
             TaskRepository.add(title)
             "success"
         }
+
+        if (result == "success") {
+            Logger.log(sessionId, requestId, "T1_Add", "persist", "success", duration, 201, isHtmx)
+
+            if (call.isHtmx()) {
+                val query = call.request.queryParameters["q"] ?: ""
+                val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
+                val (tasks, totalCount) = TaskRepository.search(query, page, 5)
+                val totalPages = if (totalCount > 0) (totalCount + 5 - 1) / 5 else 1
+                val model = mapOf(
+                    "tasks" to tasks, 
+                    "q" to query, 
+                    "page" to page, 
+                    "totalCount" to totalCount, 
+                    "totalPages" to totalPages,
+                    "flashMessage" to "Task \"$title\" added successfully." 
+                )
+                
+                val template = pebble.getTemplate("tasks/index.peb")
+                val writer = StringWriter()
+                template.evaluate(writer, model)
+                
+                call.respondText(writer.toString(), ContentType.Text.Html, HttpStatusCode.Created)
+            } else {
+                // No-JS
+                call.response.headers.append("Location", "/tasks")
+                call.respond(HttpStatusCode.SeeOther)
+            }
+        }
+    }
 
         // [Week 9] Log success
         if (result == "success") {
