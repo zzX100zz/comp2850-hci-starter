@@ -101,16 +101,19 @@ fun Route.taskRoutes() {
     }
 
 
-    /**
+        /**
      * POST /tasks - Add new task
      * Dual-mode: HTMX fragment or PRG redirect
      */
     post("/tasks") {
+        // 1. 统一获取参数 (只读一次!)
         val requestId = UUID.randomUUID().toString().substring(0, 8)
         val sessionId = call.request.queryParameters["sid"] ?: "anonymous"
         val isHtmx = call.isHtmx()
         val params = call.receiveParameters()
         val title = params["title"].orEmpty().trim()
+
+        // 2. 执行逻辑 (验证 + 添加)
         val (result, duration) = timed {
             if (title.isBlank()) {
                 Logger.log(sessionId, requestId, "T1_Add", "validate", "validation_error", 0, 400, isHtmx)
@@ -126,14 +129,19 @@ fun Route.taskRoutes() {
             "success"
         }
 
+        // 3. 成功响应 (生成反馈)
         if (result == "success") {
             Logger.log(sessionId, requestId, "T1_Add", "persist", "success", duration, 201, isHtmx)
 
             if (call.isHtmx()) {
+                // 重新获取数据以刷新列表
                 val query = call.request.queryParameters["q"] ?: ""
                 val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
                 val (tasks, totalCount) = TaskRepository.search(query, page, 5)
                 val totalPages = if (totalCount > 0) (totalCount + 5 - 1) / 5 else 1
+
+                // [Week 10 Fix] 注入消息到 model，让 index.peb 渲染
+                // 注意：这里直接使用上面定义的 `title` 变量，不再调用 receiveParameters()
                 val model = mapOf(
                     "tasks" to tasks, 
                     "q" to query, 
@@ -147,6 +155,7 @@ fun Route.taskRoutes() {
                 val writer = StringWriter()
                 template.evaluate(writer, model)
                 
+                // 返回渲染后的完整 HTML
                 call.respondText(writer.toString(), ContentType.Text.Html, HttpStatusCode.Created)
             } else {
                 // No-JS
@@ -155,6 +164,7 @@ fun Route.taskRoutes() {
             }
         }
     }
+
 
         // [Week 9] Log success
         if (result == "success") {
