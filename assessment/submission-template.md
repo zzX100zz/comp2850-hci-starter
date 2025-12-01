@@ -4,7 +4,7 @@
 > Right-click the link above and select "Save link as..." to download the template file.
 
 **Student**: Weiming Chen 201778231
-**Submission date**: [DD/MM/YYYY]
+**Submission date**: 01/12/2025
 **Academic Year**: 2025-26
 
 ---
