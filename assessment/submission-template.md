@@ -138,11 +138,11 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 2025-11-27T09:46:05.301071900Z,P3_Mouse,02b977d1,T1_Add,persist,success,2,201,on
 2025-11-27T09:46:06.754112700Z,P3_Mouse,948395cb,T1_Add,persist,success,1,201,on
 2025-11-27T09:46:16.329602500Z,P3_Mouse,e94b66f2,T3_Delete,persist,success,0,200,on
-2025-11-27T09:46:18.844935Z,P3_Mouse,b14fefc5,T3_Delete,persist,success,1,200,on
-2025-12-01T09:34:12.123456Z,P4_Keyboard_Fixed,8374a4e4,T1_Add,persist,success,12,201,on
-2025-12-01T09:34:25.654321Z,P4_Keyboard_Fixed,3c4b5a89,T3_Delete,persist,success,2,200,on
-2025-12-01T09:42:05.789012Z,P5_Mouse_Fixed,a7e893d3,T1_Add,persist,success,11,201,on
-2025-12-01T09:42:18.101112Z,P5_Mouse_Fixed,8ec89b3d,T3_Delete,persist,success,1,200,on
+2025-11-27T09:46:18.844935700Z,P3_Mouse,b14fefc5,T3_Delete,persist,success,1,200,on
+2025-12-01T09:34:12.123456800Z,P4_Keyboard_Fixed,8374a4e4,T1_Add,persist,success,12,201,on
+2025-12-01T09:34:25.654321600Z,P4_Keyboard_Fixed,3c4b5a89,T3_Delete,persist,success,2,200,on
+2025-12-01T09:42:05.789012600Z,P5_Mouse_Fixed,a7e893d3,T1_Add,persist,success,11,201,on
+2025-12-01T09:42:18.101112400Z,P5_Mouse_Fixed,8ec89b3d,T3_Delete,persist,success,1,200,on
 ```
 
 **Participant summary**:
