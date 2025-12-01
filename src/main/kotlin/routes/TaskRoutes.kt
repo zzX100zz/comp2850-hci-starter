@@ -138,6 +138,7 @@ fun Route.taskRoutes() {
             Logger.log(sessionId, requestId, "T1_Add", "persist", "success", duration, 201, isHtmx)
 
             if (call.isHtmx()) {
+                // Week 8 Update: Re-render list with pagination state
                 val query = call.request.queryParameters["q"] ?: ""
                 val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
                 val (tasks, totalCount) = TaskRepository.search(query, page, 5)
@@ -153,21 +154,21 @@ fun Route.taskRoutes() {
                 val template = pebble.getTemplate("tasks/index.peb")
                 val writer = StringWriter()
                 template.evaluate(writer, model)
-                // ✅ Fixed code: Appends an OOB-swap div with ARIA roles
-                val html = call.renderTemplate("tasks/index.peb", model)
+                
+                val html = writer.toString()
 
                 val feedback = """
                     <div id="sr-announcer" hx-swap-oob="true" 
-                    role="status" 
-                    aria-live="polite" 
-                    class="visually-hidden">
-                    Task "${title}" added successfully.
-                </div>
+                         role="status" 
+                         aria-live="polite" 
+                         class="visually-hidden">
+                        Task "${title}" added successfully.
+                    </div>
                 """.trimIndent()
 
                 call.respondText(html + feedback, ContentType.Text.Html, HttpStatusCode.Created)
-
             } else {
+                // No-JS: POST-Redirect-GET pattern (303 See Other)
                 call.response.headers.append("Location", "/tasks")
                 call.respond(HttpStatusCode.SeeOther)
             }
