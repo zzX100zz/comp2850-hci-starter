@@ -207,6 +207,7 @@ call.respondText(writer.toString(), ContentType.Text.Html, HttpStatusCode.Create
 **Why**: Fixes WCAG 4.1.3 Status Messages (and Nielsen #1). Previously, the action was silent. Now, the status is programmatically determined and announced by Assistive Technologies.
 
 **Impact**: Blind users (like P2) now receive immediate auditory confirmation ("Task added successfully") after submitting, removing the uncertainty that caused confusion in Week 9.
+
 ---
 
 ### Fix 2: Prevent Double Submission
