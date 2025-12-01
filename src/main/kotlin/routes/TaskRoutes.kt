@@ -140,37 +140,24 @@ fun Route.taskRoutes() {
             Logger.log(sessionId, requestId, "T1_Add", "persist", "success", duration, 201, isHtmx)
 
             if (call.isHtmx()) {
-                // Week 8 Update: Re-render list with pagination state
                 val query = call.request.queryParameters["q"] ?: ""
                 val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
                 val (tasks, totalCount) = TaskRepository.search(query, page, 5)
                 val totalPages = if (totalCount > 0) (totalCount + 5 - 1) / 5 else 1
-
                 val model = mapOf(
                     "tasks" to tasks, 
                     "q" to query, 
                     "page" to page, 
                     "totalCount" to totalCount, 
-                    "totalPages" to totalPages
+                    "totalPages" to totalPages,
+                    "flashMessage" to "Task \"${call.receiveParameters()["title"]?.trim()}\" added successfully."
                 )
+                
                 val template = pebble.getTemplate("tasks/index.peb")
                 val writer = StringWriter()
                 template.evaluate(writer, model)
-                val html = writer.toString()
-
-                // [Week 10 Fix] Append status message for Screen Readers
-                val feedback = """
-                    <div id="sr-announcer" hx-swap-oob="true" 
-                         role="status" 
-                         aria-live="polite" 
-                         class="visually-hidden">
-                        Task "${call.receiveParameters()["title"]?.trim()}" added successfully.
-                    </div>
-                """.trimIndent()
-
-                call.respondText(html + feedback, ContentType.Text.Html, HttpStatusCode.Created)
+                call.respondText(writer.toString(), ContentType.Text.Html, HttpStatusCode.Created)
             } else {
-                // No-JS: POST-Redirect-GET pattern (303 See Other)
                 call.response.headers.append("Location", "/tasks")
                 call.respond(HttpStatusCode.SeeOther)
             }

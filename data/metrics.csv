@@ -32,3 +32,10 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 2025-12-01T02:02:29.341839100Z,anonymous,05ec76a3,T3_Delete,persist,success,1,200,on
 2025-12-01T02:02:32.116345800Z,anonymous,39664071,T3_Delete,persist,success,1,200,on
 2025-12-01T02:02:33.193684900Z,anonymous,5ad01884,T3_Delete,persist,success,1,200,on
+2025-12-01T02:30:07.129680Z,anonymous,295053ef,T1_Add,persist,success,17,201,on
+2025-12-01T02:30:19.891582300Z,anonymous,1a7ed633,T1_Add,persist,success,1,201,on
+2025-12-01T02:30:21.225097600Z,anonymous,8cdcf9d7,T1_Add,persist,success,1,201,on
+2025-12-01T02:30:30.366087Z,anonymous,68b7ee1f,T3_Delete,persist,success,2,200,on
+2025-12-01T02:30:31.368247700Z,anonymous,8af4fbb3,T3_Delete,persist,success,1,200,on
+2025-12-01T02:30:31.905504500Z,anonymous,0c3777fe,T3_Delete,persist,success,1,200,on
+2025-12-01T02:31:28.159013500Z,anonymous,ce22835e,T2_Edit,click_edit,success,0,200,on

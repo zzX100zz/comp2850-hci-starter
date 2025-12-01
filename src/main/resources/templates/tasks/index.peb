@@ -3,8 +3,6 @@
 {% block content %}
 <h1>Tasks</h1>
 
-<div id="sr-announcer" aria-live="polite"></div>
-
 {# Add Task Form - Week 6 #}
 <section aria-labelledby="add-heading">
   <h2 id="add-heading">Add a new task</h2>
@@ -44,7 +42,14 @@
 </section>
 
 <div id="task-container">
-
+{% if flashMessage is not null %}
+    <div id="sr-announcer" 
+         role="status" 
+         aria-live="polite" 
+         style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #c3e6cb;">
+        ✅ {{ flashMessage }}
+    </div>
+    {% endif %}
 {# Task List - Week 6 (inline, no partials) #}
 {# TODO: Week 7 Lab 1 Activity 2 Step 4
    Update this section to use conditional includes:
