@@ -109,15 +109,17 @@ fun Route.taskRoutes() {
         val requestId = UUID.randomUUID().toString().substring(0, 8)
         val sessionId = call.request.queryParameters["sid"] ?: "anonymous"
         val isHtmx = call.isHtmx()
+
         val params = call.receiveParameters()
         val title = params["title"].orEmpty().trim()
 
         val (result, duration) = timed {
-            // 这里的 title 现在是引用外面的变量，而不是新定义
             if (title.isBlank()) {
                 Logger.log(sessionId, requestId, "T1_Add", "validate", "validation_error", 0, 400, isHtmx)
                 if (call.isHtmx()) {
-                    val error = """<div id="status" hx-swap-oob="true" role="alert" aria-live="assertive">Title is required.</div>"""
+                    val error = """<div id="status" hx-swap-oob="true" role="alert" aria-live="assertive">
+                        Title is required. Please enter at least one character.
+                    </div>"""
                     return@timed call.respondText(error, ContentType.Text.Html, HttpStatusCode.BadRequest)
                 } else {
                     call.response.headers.append("Location", "/tasks")
@@ -134,57 +136,37 @@ fun Route.taskRoutes() {
             Logger.log(sessionId, requestId, "T1_Add", "persist", "success", duration, 201, isHtmx)
 
             if (call.isHtmx()) {
+                // Week 8 Update: Re-render list with pagination state
                 val query = call.request.queryParameters["q"] ?: ""
                 val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
                 val (tasks, totalCount) = TaskRepository.search(query, page, 5)
                 val totalPages = if (totalCount > 0) (totalCount + 5 - 1) / 5 else 1
 
-                // [Week 10 Fix] 现在 title 变量在这里可以被访问到了！
                 val model = mapOf(
                     "tasks" to tasks, 
                     "q" to query, 
                     "page" to page, 
                     "totalCount" to totalCount, 
-                    "totalPages" to totalPages,
-                    "flashMessage" to "Task \"$title\" added successfully." 
+                    "totalPages" to totalPages
                 )
-                
                 val template = pebble.getTemplate("tasks/index.peb")
                 val writer = StringWriter()
                 template.evaluate(writer, model)
                 
-                call.respondText(writer.toString(), ContentType.Text.Html, HttpStatusCode.Created)
+                val html = writer.toString()
+
+                val feedback = """
+                    <div id="sr-announcer" hx-swap-oob="true" 
+                         role="status" 
+                         aria-live="polite" 
+                         class="visually-hidden">
+                        Task "${title}" added successfully.
+                    </div>
+                """.trimIndent()
+
+                call.respondText(html + feedback, ContentType.Text.Html, HttpStatusCode.Created)
             } else {
-                call.response.headers.append("Location", "/tasks")
-                call.respond(HttpStatusCode.SeeOther)
-            }
-        }
-    }
-
-
-        // [Week 9] Log success
-        if (result == "success") {
-            Logger.log(sessionId, requestId, "T1_Add", "persist", "success", duration, 201, isHtmx)
-
-            if (call.isHtmx()) {
-                val query = call.request.queryParameters["q"] ?: ""
-                val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
-                val (tasks, totalCount) = TaskRepository.search(query, page, 5)
-                val totalPages = if (totalCount > 0) (totalCount + 5 - 1) / 5 else 1
-                val model = mapOf(
-                    "tasks" to tasks, 
-                    "q" to query, 
-                    "page" to page, 
-                    "totalCount" to totalCount, 
-                    "totalPages" to totalPages,
-                    "flashMessage" to "Task \"${call.receiveParameters()["title"]?.trim()}\" added successfully."
-                )
-                
-                val template = pebble.getTemplate("tasks/index.peb")
-                val writer = StringWriter()
-                template.evaluate(writer, model)
-                call.respondText(writer.toString(), ContentType.Text.Html, HttpStatusCode.Created)
-            } else {
+                // No-JS: POST-Redirect-GET pattern (303 See Other)
                 call.response.headers.append("Location", "/tasks")
                 call.respond(HttpStatusCode.SeeOther)
             }
@@ -196,20 +178,16 @@ fun Route.taskRoutes() {
      * Dual-mode: HTMX empty response or PRG redirect
      */
     post("/tasks/{id}/delete") {
-        // [Week 9] Instrumentation setup
         val requestId = UUID.randomUUID().toString().substring(0, 8)
         val sessionId = call.request.queryParameters["sid"] ?: "anonymous"
         val isHtmx = call.isHtmx()
 
-        // [Week 9] Timer wrapper
         val (removed, duration) = timed {
             val id = call.parameters["id"]?.toIntOrNull()
             id?.let { TaskRepository.delete(it) } ?: false
         }
 
-        // [Week 9] Log outcome
-        val outcome = if (removed) "success" else "not_found"
-        Logger.log(sessionId, requestId, "T3_Delete", "persist", outcome, duration, 200, isHtmx)
+        Logger.log(sessionId, requestId, "T3_Delete", "persist", if (removed) "success" else "not_found", duration, 200, isHtmx)
 
         if (call.isHtmx()) {
             // Week 8 Update: Return list to keep pagination correct
