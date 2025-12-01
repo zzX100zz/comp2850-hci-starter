@@ -97,8 +97,10 @@
 - [x] "I may take screenshots and notes. I'll remove any identifying information."
 - [x] "Do you consent to participate?" [Wait for verbal yes]
 
-**Recorded consent timestamp**: [e.g., "P1 consented 22/11/2025 14:05"]
-
+**Recorded consent timestamp**:
+- P1 consented 27/11/2025 09:40
+- P2 consented 27/11/2025 09:43
+- P3 consented 27/11/2025 09:45
 ---
 
 ## 2. Findings Table
@@ -127,23 +129,22 @@
 
 ```csv
 ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
-2025-11-28T02:41:38.365395500Z,P1_Mouse,ba827e5d,T1_Add,persist,success,10,201,on
-2025-11-28T02:41:46.541890500Z,P1_Mouse,9a548ed3,T3_Delete,persist,success,1,200,on
-2025-11-28T02:44:27.037988600Z,P2_Keyboard,fe61629d,T1_Add,persist,success,12,201,on
-2025-11-28T02:44:41.492445800Z,P2_Keyboard,d9f711b8,T3_Delete,persist,success,2,200,on
-2025-11-28T02:46:05.301071900Z,P3_Mouse,02b977d1,T1_Add,persist,success,2,201,on
-2025-11-28T02:46:06.754112700Z,P3_Mouse,948395cb,T1_Add,persist,success,1,201,on
-2025-11-28T02:46:16.329602500Z,P3_Mouse,e94b66f2,T3_Delete,persist,success,0,200,on
-2025-11-28T02:46:18.844935Z,P3_Mouse,b14fefc5,T3_Delete,persist,success,1,200,on
+2025-11-27T09:41:38.365395500Z,P1_Mouse,ba827e5d,T1_Add,persist,success,10,201,on
+2025-11-27T09:41:46.541890500Z,P1_Mouse,9a548ed3,T3_Delete,persist,success,1,200,on
+2025-11-27T09:44:27.037988600Z,P2_Keyboard,fe61629d,T1_Add,persist,success,12,201,on
+2025-11-27T09:44:41.492445800Z,P2_Keyboard,d9f711b8,T3_Delete,persist,success,2,200,on
+2025-11-27T09:46:05.301071900Z,P3_Mouse,02b977d1,T1_Add,persist,success,2,201,on
+2025-11-27T09:46:06.754112700Z,P3_Mouse,948395cb,T1_Add,persist,success,1,201,on
+2025-11-27T09:46:16.329602500Z,P3_Mouse,e94b66f2,T3_Delete,persist,success,0,200,on
+2025-11-27T09:46:18.844935Z,P3_Mouse,b14fefc5,T3_Delete,persist,success,1,200,on
 ```
 
 **Participant summary**:
-- **P1**: [Variant - e.g., "Standard mouse + HTMX"]
-- **P2**: [Variant - e.g., "Keyboard-only, HTMX-on"]
-- **P3** (if applicable): [Variant]
-- **P4** (if applicable): [Variant]
+- **P1**: Variant - Standard mouse + HTMX
+- **P2**: Variant - Keyboard-only, HTMX-on
+- **P3**: Variant - Standard mouse + HTMX
 
-**Total participants**: [n=2, 3, or 4]
+**Total participants**: 3
 
 ---
 
@@ -151,53 +152,89 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 
 **Instructions**: Show before/after code for 1-3 fixes. Link each to findings table.
 
-### Fix 1: [Fix Name]
+### Fix 1: Screen Reader Success Announcement
 
-**Addresses finding**: [Finding #X from table above]
-
-**Before** ([file path:line number]):
+**Addresses finding**: Success status silent for SR (Finding #2)
+**Before** (src/main/kotlin/routes/TaskRoutes.kt):
 ```kotlin
 // ❌ Problem code
-[Paste your original code here]
+// Returns only list HTML, no status message appended
+val template = pebble.getTemplate("tasks/index.peb")
+// ... evaluate template to writer ...
+call.respondText(writer.toString(), ContentType.Text.Html, HttpStatusCode.Created)
 ```
 
-**After** ([file path:line number]):
+**After** (src/main/kotlin/routes/TaskRoutes.kt):
 ```kotlin
 // ✅ Fixed code
-[Paste your improved code here]
+// Appends an OOB-swap div with ARIA roles
+val html = call.renderTemplate("tasks/index.peb", model)
+
+val feedback = """
+    <div id="sr-announcer" hx-swap-oob="true" 
+         role="status" 
+         aria-live="polite" 
+         class="visually-hidden">
+        Task "${title}" added successfully.
+    </div>
+""".trimIndent()
+
+call.respondText(html + feedback, ContentType.Text.Html, HttpStatusCode.Created)
 ```
 
-**What changed**: [1 sentence - what you added/removed/modified]
+**What changed**: Modified the server response to append a hidden <div> containing the success message with specific ARIA attributes.
 
-**Why**: [1 sentence - which WCAG criterion or usability issue this fixes]
+**Why**: Fixes WCAG 4.1.3 Status Messages by ensuring status updates are programmatically determined and announced by Assistive Technologies.
 
-**Impact**: [1-2 sentences - how this improves UX, who benefits]
+**Impact**: Blind users (like P2) now receive immediate auditory confirmation ("Task added successfully") after submitting, removing uncertainty.
 
 ---
 
-### Fix 2: [Fix Name]
+### Fix 2: Prevent Double Submission
 
-**Addresses finding**: [Finding #X]
+**Addresses finding**: Double submission of tasks (Finding #1)
 
-**Before**:
-```kotlin
-[Original code]
+**Before** (src/main/templates/tasks/index.peb):
+```html
+// ❌ Problem code
+<button type="submit">Add Task</button>
 ```
 
-**After**:
-```kotlin
-[Fixed code]
+**After** (src/main/templates/tasks/index.peb):
+```html
+// ✅ Fixed code
+<button type="submit" hx-disabled-elt="this">Add Task</button>
 ```
 
-**What changed**:
+**What changed**: Added hx-disabled-elt="this" attribute to the submit button.
 
-**Why**:
-
-**Impact**:
+**Why**: Addresses Nielsen Heuristic #1 (Visibility of System Status) by providing immediate visual feedback (disabled state) and preventing duplicate events.
+ 
+**Impact**: Prevents users (like P3) from accidentally clicking twice while waiting for the server, ensuring data integrity and a smoother UX.
 
 ---
 
-[Add Fix 3 if applicable]
+### Fix 3: Fix Broken Image Syntax
+
+**Addresses finding**: Broken Image Syntax (Finding #3)
+
+**Before** (src/main/templates/tasks/index.peb):
+```html
+// ❌ Problem code
+< img src="/static/img/icon.png" width="16" height="16" alt="" aria-hidden="true">
+```
+
+**After** (src/main/templates/tasks/index.peb):
+```html
+// ✅ Fixed code
+<img src="/static/img/icon.png" width="16" height="16" alt="" aria-hidden="true">
+```
+
+**What changed**: Removed the invalid space between < and img.
+
+**Why**: Fixes WCAG 4.1.1 Parsing error which caused the browser to ignore the tag entirely.
+
+**Impact**: Restores the visual icon for sighted users (P1) and ensures the page structure is valid for all user agents.
 
 ---
 
@@ -269,9 +306,12 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 
 | Filename | What it shows | Context/Link to finding |
 |----------|---------------|-------------------------|
-| wk9-validation-error.png | Yellow error message "Please enter a string" | Proof that validation logic works (P3 testing) |
-| wk9-double-add-log.png | Screenshot of metrics.csv rows 5-6 | Finding #1: Double submission timestamps |
+| wk9-double-add-log.png | Screenshot of task list 5-6 | Finding #1: Double submission timestamps |
 | wk7-broken-image-syntax.png | Image tag has syntax error (< img) | Finding #3: Syntax Error causing broken image |
+| wk9-no-feedback-evidence.png | Combined Evidence: UI shows no response visually after adding tasks (Finding #1 consequence); Browser Inspector shows DOM completely lacks any status message element (Finding #2 cause). | Findings #1 & #2 (Before): Shared Root Cause. The absence of any feedback mechanism caused the user to double-click (visual failure) and the Screen Reader to remain silent (code failure). |
+| wk10-image-fixed.png | The small icon rendering correctly | Fix #3 (After): Syntax corrected, visual restored |
+| wk10-add-button-feedback.png | "Add Task" button disabled state | Fix #2 (After): Button prevents double clicks |
+| wk10-code-feedback-added.png | Source Code showing added <div role="status"> string | Fix #1 (After): Feedback implemented WITH accessibility roles |
 
 **PII check**:
 - [x] All screenshots cropped to show only relevant UI
@@ -285,21 +325,16 @@ ts_iso,session_id,request_id,task_code,step,outcome,ms,http_status,js_mode
 **Instructions**: Attach pilot notes as separate files (P1-notes.md, P2-notes.md, etc.). Summarize key observations here.
 
 **P1** (Mouse):
-- **Key observation 1**: Smooth completion. Add time 10ms. No issues found.
+- **Key observation 1**: Generally smooth, but identified a Visual Bug immediately. Pointed out the broken icon above the list. They noted: "Why is there no image here?" (Led to discovery of Finding #3: Broken Image Syntax).
+
 
 **P2** (Keyboard):
-- Navigated using Tab/Enter.
-- **Key observation 1**: Focus rings were visible.
-- **Key observation 2**: Completed Add/Delete cycle efficiently (12ms add time).
-
-[Repeat for P3, P4 if applicable]
+- **Key observation 1**: Keyboard navigation works well (Focus visible).
+- **Key observation 2**: Although P2 (sighted) could verify the action visually, they noted: "If I were blind, I wouldn't know it worked." The system lacks programmatic feedback (SR alerts), making it unusable for screen reader users despite being keyboard accessible.
 
 **P3** (Mouse):
-- **Key observation 1**: At 02:46:05, P3 clicked "Add". Seemed unsure if it worked, clicked again 1.4s later.
-- Resulted in duplicate tasks.
-- Deleted both duplicates afterwards.
-- Triggered validation error intentionally to test robustness (see screenshot).
----
+- **Key observation 1**: Double Submission Error. At 09:46:05, P3 clicked "Add Task". Due to lack of clear visual/audio feedback, P3 thought the action failed and clicked again at 09:46:06 (1.4s later). Duplicate tasks created. P3 had to delete both. Confirms the need for better feedback mechanisms (prevent double-submit).
+
 
 ## Evidence Chain Example (Full Trace)
 

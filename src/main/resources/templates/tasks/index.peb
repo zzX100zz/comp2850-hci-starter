@@ -16,7 +16,7 @@
     <div style="display: flex; gap: 10px;">
         <input type="text" id="title" name="title" required
                placeholder="e.g., Buy milk" aria-describedby="title-hint" style="flex-grow: 1;">
-        <button type="submit">Add Task</button>
+        <button type="submit" hx-disabled-elt="this">Add Task</button>
     </div>
     <small id="title-hint">Keep it short and specific.</small>
     
