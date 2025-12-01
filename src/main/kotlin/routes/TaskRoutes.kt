@@ -24,7 +24,7 @@ fun Route.taskRoutes() {
 
     fun ApplicationCall.isHtmx(): Boolean = request.headers["HX-Request"]?.equals("true", ignoreCase = true) == true
 
-    // GET /tasks - List tasks with Search & Pagination
+    // GET /tasks - List tasks
     get("/tasks") {
         val query = call.request.queryParameters["q"] ?: ""
         val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
@@ -50,15 +50,17 @@ fun Route.taskRoutes() {
         call.respondText(writer.toString(), ContentType.Text.Html)
     }
 
-    // POST /tasks - Add new task (With Feedback Fix)
+    // POST /tasks - Add new task
     post("/tasks") {
         val requestId = UUID.randomUUID().toString().substring(0, 8)
         val sessionId = call.request.queryParameters["sid"] ?: "anonymous"
         val isHtmx = call.isHtmx()
 
-        val (result, duration) = timed {
-            val title = call.receiveParameters()["title"].orEmpty().trim()
+        // [Fix] Read parameters ONCE at the top to avoid "Double Receive" errors
+        val params = call.receiveParameters()
+        val title = params["title"].orEmpty().trim()
 
+        val (result, duration) = timed {
             if (title.isBlank()) {
                 Logger.log(sessionId, requestId, "T1_Add", "validate", "validation_error", 0, 400, isHtmx)
                 if (call.isHtmx()) {
@@ -94,14 +96,15 @@ fun Route.taskRoutes() {
                 val writer = StringWriter()
                 template.evaluate(writer, model)
                 
-                // [Week 10 Critical Fix] Capture HTML and append Feedback
                 val html = writer.toString()
+
+                // [Week 10 Fix] Now we can safely use the 'title' variable
                 val feedback = """
                     <div id="sr-announcer" hx-swap-oob="true" 
                          role="status" 
                          aria-live="polite" 
                          style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #c3e6cb;">
-                        ✅ Task "${call.receiveParameters()["title"]?.trim()}" added successfully.
+                        ✅ Task "${title}" added successfully.
                     </div>
                 """.trimIndent()
 
@@ -146,6 +149,10 @@ fun Route.taskRoutes() {
     // GET /tasks/{id}/edit
     get("/tasks/{id}/edit") {
         val id = call.parameters["id"]?.toIntOrNull()
+        
+        // Simple log for interaction
+        Logger.log(call.request.queryParameters["sid"] ?: "anonymous", UUID.randomUUID().toString().substring(0, 8), "T2_Edit", "click_edit", "success", 0, 200, call.isHtmx())
+
         if (id == null) { call.respond(HttpStatusCode.BadRequest); return@get }
 
         val query = call.request.queryParameters["q"] ?: ""
@@ -168,7 +175,10 @@ fun Route.taskRoutes() {
     // POST /tasks/{id} (Update)
     post("/tasks/{id}") {
         val id = call.parameters["id"]?.toIntOrNull()
-        val title = call.receiveParameters()["title"]?.trim()
+        // Fix: Read params once
+        val params = call.receiveParameters()
+        val title = params["title"]?.trim()
+        
         val requestId = UUID.randomUUID().toString().substring(0, 8)
         val sessionId = call.request.queryParameters["sid"] ?: "anonymous"
         val isHtmx = call.isHtmx()
