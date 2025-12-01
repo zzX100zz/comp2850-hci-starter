@@ -64,10 +64,6 @@ fun Route.taskRoutes() {
     fun ApplicationCall.isHtmx(): Boolean = request.headers["HX-Request"]?.equals("true", ignoreCase = true) == true
 
     /**
-     * GET /tasks - List all tasks
-     * Returns full page (no HTMX differentiation in Week 6)
-     */
-        /**
      * GET /tasks - List tasks with Search & Pagination (Week 8)
      */
     get("/tasks") {
@@ -110,20 +106,26 @@ fun Route.taskRoutes() {
      * Dual-mode: HTMX fragment or PRG redirect
      */
     post("/tasks") {
+        // [Week 9] Instrumentation setup
         val requestId = UUID.randomUUID().toString().substring(0, 8)
         val sessionId = call.request.queryParameters["sid"] ?: "anonymous"
         val isHtmx = call.isHtmx()
+
+        // [Week 9] Wrap logic with timer
         val (result, duration) = timed {
             val title = call.receiveParameters()["title"].orEmpty().trim()
 
             if (title.isBlank()) {
+                // [Week 9] Log validation error
                 Logger.log(sessionId, requestId, "T1_Add", "validate", "validation_error", 0, 400, isHtmx)
+                // Validation error handling
                 if (call.isHtmx()) {
                     val error = """<div id="status" hx-swap-oob="true" role="alert" aria-live="assertive">
                         Title is required. Please enter at least one character.
                     </div>"""
                     return@timed call.respondText(error, ContentType.Text.Html, HttpStatusCode.BadRequest)
                 } else {
+                    // No-JS: redirect back (could add error query param)
                     call.response.headers.append("Location", "/tasks")
                     return@timed call.respond(HttpStatusCode.SeeOther)
                 }
@@ -154,15 +156,15 @@ fun Route.taskRoutes() {
                 val template = pebble.getTemplate("tasks/index.peb")
                 val writer = StringWriter()
                 template.evaluate(writer, model)
-                
                 val html = writer.toString()
 
+                // [Week 10 Fix] Append status message for Screen Readers
                 val feedback = """
                     <div id="sr-announcer" hx-swap-oob="true" 
                          role="status" 
                          aria-live="polite" 
                          class="visually-hidden">
-                        Task "${title}" added successfully.
+                        Task "${call.receiveParameters()["title"]?.trim()}" added successfully.
                     </div>
                 """.trimIndent()
 
