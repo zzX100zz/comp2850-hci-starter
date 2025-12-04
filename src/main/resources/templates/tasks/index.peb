@@ -57,30 +57,10 @@
           Current tasks 
           {% if q is not empty %}(Found {{ totalCount }}){% else %}({{ totalCount }}){% endif %}
       </h2>
-
-      <style>
-        /* make the two images that follow appear side-by-side on wider screens */
-        #task-container section > img {
-          display: inline-block;
-          width: calc(50% - 8px);
-          vertical-align: top;
-          margin-right: 16px;
-        }
-        #task-container section > img:last-of-type {
-          margin-right: 0;
-        }
-        /* stack them on narrow screens */
-        @media (max-width: 600px) {
-          #task-container section > img {
-        display: block;
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
-          }
-        }
-      </style>
-      <img src="/static/img/3.gif" width="150" height="150" alt="" aria-hidden="true">
-      <img src="/static/img/6.gif" width="150" height="150" alt="" aria-hidden="true">
+      <div style="gap:10px; text-align:center;">
+        <img src="/static/img/3.gif" width="150" height="150" alt="nimabee" aria-hidden="true">
+        <img src="/static/img/6.gif" width="150" height="150" alt="nimabee" aria-hidden="true">
+      </div>
       <ul id="task-list">
         {% for task in tasks %}
           <li id="task-{{ task.id }}">
